@@ -48,9 +48,11 @@ class DomainChallengesCommand extends TerminusCommand implements SiteAwareInterf
         )->all();
 
         $data = [];
-        foreach ($domains AS $domain) {
+        foreach ($domains as $domain) {
             $acmeValues = (array)$domain->get('acme_preauthorization_challenges');
-            array_walk($acmeValues, function(&$item){ $item = (array)$item; });
+            array_walk($acmeValues, function (&$item) {
+                $item = (array)$item;
+            });
 
             $data[] = [
                 'domain' => $domain->id,
@@ -68,7 +70,7 @@ class DomainChallengesCommand extends TerminusCommand implements SiteAwareInterf
         }
 
         // Sort by Domain Name.
-        usort($data, function( $a, $b ) {
+        usort($data, function ($a, $b) {
             if ($a['domain'] === $b['domain']) {
                 return 0;
             }
