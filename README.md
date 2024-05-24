@@ -3,7 +3,7 @@
 [![CircleCI](https://circleci.com/gh/terminus-plugin-project/terminus-domain-challenge.svg?style=shield)](https://circleci.com/gh/terminus-plugin-project/terminus-domain-challenge)
 [![Actively Maintained](https://img.shields.io/badge/Pantheon-Actively_Maintained-yellow?logo=pantheon&color=FFDC28)](https://pantheon.io/docs/oss-support-levels#actively-maintained-support)
 
-[![Terminus v3.x Compatible](https://img.shields.io/badge/terminus-2.x%20--%203.x-green.svg)](https://github.com/terminus-plugin-project/tree/1.x)
+[![Terminus v3.x Compatible](https://img.shields.io/badge/terminus-3.x-green.svg)](https://github.com/terminus-plugin-project/tree/1.x)
 
 A simple plugin for Terminus-CLI to get the Domain DNS challenge based on a site.
 
