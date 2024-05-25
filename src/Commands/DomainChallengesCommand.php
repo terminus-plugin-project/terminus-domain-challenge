@@ -24,10 +24,9 @@ class DomainChallengesCommand extends TerminusCommand implements SiteAwareInterf
      *
      * @field-labels
      *     domain: Domain
-     *     http_status: HTTP Status
+     *     status: Status
      *     http_key: HTTP Name
      *     http_token: HTTP Token
-     *     dns_status: DNS Status
      *     dns_key: DNS Key
      *     dns_token: DNS Token
      * @param string $site_env Site & environment in the format `site-name.env`
@@ -49,6 +48,10 @@ class DomainChallengesCommand extends TerminusCommand implements SiteAwareInterf
 
         $data = [];
         foreach ($domains as $domain) {
+            $status = array_combine(
+                array_column($domain->get('statuses'), 'type'),
+                array_column($domain->get('statuses'), 'status')
+            );
             $acmeValues = (array)$domain->get('acme_preauthorization_challenges');
             array_walk($acmeValues, function (&$item) {
                 $item = (array)$item;
@@ -56,12 +59,11 @@ class DomainChallengesCommand extends TerminusCommand implements SiteAwareInterf
 
             $data[] = [
                 'domain' => $domain->id,
-                'http_status' => $acmeValues['http-01']['status'],
-                'http_key' => $acmeValues['http-01']['verification_key'],
-                'http_token' => $acmeValues['http-01']['token'],
-                'dns_status' => $acmeValues['dns-01']['status'],
-                'dns_key' => $acmeValues['dns-01']['verification_key'],
-                'dns_token' => $acmeValues['dns-01']['token'],
+                'status' => $status['https'],
+                'http_key' => $acmeValues['http-01']['verification_key'] ?? 'N/A',
+                'http_token' => $acmeValues['http-01']['token'] ?? 'N/A',
+                'dns_key' => $acmeValues['dns-01']['verification_key'] ?? 'N/A',
+                'dns_token' => $acmeValues['dns-01']['token'] ?? 'N/A',
             ];
         }
 
