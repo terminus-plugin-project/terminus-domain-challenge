@@ -59,11 +59,11 @@ class DomainChallengesCommand extends TerminusCommand implements SiteAwareInterf
 
             $data[] = [
                 'domain' => $domain->id,
-                'status' => $status['https'],
+                'status' => $acmeValues['http-01']['status'] ?? $domain->get('ownership_status')->preprovision_result->status,
                 'http_key' => $acmeValues['http-01']['verification_key'] ?? 'N/A',
-                'http_token' => $acmeValues['http-01']['token'] ?? 'N/A',
+                'http_token' => $acmeValues['http-01']['verification_value'] ?? 'N/A',
                 'dns_key' => $acmeValues['dns-01']['verification_key'] ?? 'N/A',
-                'dns_token' => $acmeValues['dns-01']['token'] ?? 'N/A',
+                'dns_token' => $acmeValues['dns-01']['verification_value'] ?? 'N/A',
             ];
         }
 
