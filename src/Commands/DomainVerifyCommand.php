@@ -135,6 +135,8 @@ class DomainVerifyCommand extends TerminusCommand implements SiteAwareInterface
         for ($polls = 0; $polls < 15; $polls++) {
             sleep(10);
             try {
+                // Adding in a second point of verification to test things.
+                $this->startVerification($site_env, $domain, $challenge_type);
                 $data = $this->getDomain($site_env, $domain);
             } catch (\Exception $e) {
                 $pollFailures++;
