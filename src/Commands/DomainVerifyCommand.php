@@ -85,14 +85,17 @@ class DomainVerifyCommand extends TerminusCommand implements SiteAwareInterface
     }
 
     /**
-     * @param Environment $env
+     * Verify the challenge for the provided item.
+     *
+     * @param string $site_env
      * @param string $domain
      * @param string $challenge_type
-     * @return void
+     *
      * @throws TerminusException
      * @throws TerminusNotFoundException
      */
-    protected function verifyChallenge(string $site_env, string $domain, string $challenge_type) {
+    protected function verifyChallenge(string $site_env, string $domain, string $challenge_type)
+    {
         // Check if it's already been verified, and note current challenges.
         $data = $this->getDomain($site_env, $domain);
 
@@ -179,49 +182,14 @@ class DomainVerifyCommand extends TerminusCommand implements SiteAwareInterface
         mixed $data,
         string $challenge_type
     ) {
-        // Display rich error information if we have any.
-        $preprovision_result = $data->{'ownership_status'};
-        $preprovision_result = $preprovision_result->{'preprovision_result'};
         $pantheon_docs = 'https://pantheon.io/docs/guides/launch/domains';
-        $support_ref = '';
 
         if (!empty($data->{'dns_status_details'}->{'help_link'})) {
-        // @todo Need to check if this is still relevant.
-        if (!empty($preprovision_result->last_preprovision_problem)) {
-            $problem = $preprovision_result->last_preprovision_problem;
-            if (!empty($problem->PantheonDocsLink)) {
-                $pantheon_docs = $problem->PantheonDocsLink;
-            }
-            if (!empty($problem->SupportReference)) {
-                $support_ref = " with reference \"" . $problem->SupportReference . '"';
-            }
-            if (!empty($problem->PantheonTitle)) {
-                $this->log()->notice($problem->PantheonTitle);
-            }
-            if (!empty($problem->PantheonDetail)) {
-                $this->log()->notice($problem->PantheonDetail);
-            }
-            if (!empty($problem->PantheonActionItem)) {
-                $this->log()->notice($problem->PantheonActionItem);
-            }
-
-            if (!empty($problem->Detail) || !empty($problem->ProblemType)) {
-                $this->log()->notice('');
-                $detail = '';
-                if (!empty($problem->ProblemType)) {
-                    $detail = $detail . "\n" . $problem->ProblemType;
-                }
-                if (!empty($problem->Detail)) {
-                    $detail = $detail . "\n" . $problem->Detail;
-                }
-                $this->log()->notice("Raw verification result:$detail");
-            }
-        } else {
-            $this->log()->notice('Double-check that your challenge is being served correctly.');
+            $pantheon_docs = $data->{'dns_status_details'}->{'help_link'};
         }
 
+        $this->log()->notice('Double-check that your challenge is being served correctly.');
         $this->log()->notice('See {link} for assistance', ['link' => $pantheon_docs]);
-        $this->log()->notice("or contact Pantheon Support$support_ref.");
 
         // Warn if ownership verification has become unavailable.
         // (Typically user has attempted more times than LE allows per hour)
