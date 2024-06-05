@@ -262,7 +262,6 @@ class DomainVerifyCommand extends TerminusCommand implements SiteAwareInterface
     {
         $env = $this->getEnv($site_env);
         $url = $env->getUrl() . '/domains/' . rawurlencode($domain) . '/' . 'verify-ownership';
-        dump($url);
         $body = [
             'challenge_type' => $challenge_type,
             'client' => 'terminus-plugin', // Only in case we want statistics
