@@ -149,12 +149,10 @@ class DomainVerifyCommand extends TerminusCommand implements SiteAwareInterface
                 continue;
             }
 
-            $status = $data->{'ownership_status'}->{'preprovision_result'}->status;
-            switch ($status) {
-                case 'success':
-                    $this->log()->notice('Ownership verification is complete!');
-                    $this->log()->notice('Your HTTPS certificate will be deployed to Pantheon\'s Global CDN shortly.');
-                    return;
+            if ($data->{'status_message'} !== 'Verification Pending') {
+                $this->log()->notice('Ownership verification is complete!');
+                $this->log()->notice('Your HTTPS certificate will be deployed to Pantheon\'s Global CDN shortly.');
+                return;
             }
         }
 
@@ -186,6 +184,8 @@ class DomainVerifyCommand extends TerminusCommand implements SiteAwareInterface
         $preprovision_result = $preprovision_result->{'preprovision_result'};
         $pantheon_docs = 'https://pantheon.io/docs/guides/launch/domains';
         $support_ref = '';
+
+        if (!empty($data->{'dns_status_details'}->{'help_link'})) {
         // @todo Need to check if this is still relevant.
         if (!empty($preprovision_result->last_preprovision_problem)) {
             $problem = $preprovision_result->last_preprovision_problem;
